@@ -1,4 +1,4 @@
-#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||LIBRARY USED||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+||LIBRARY USED||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 #-----------------------------------------------------------------------BATTRY AND RAM-----------------------------------------------------------------------------------------------------#
 import psutil
@@ -25,9 +25,13 @@ import numpy as np
 import pandas as pd
 #----------------------------------------------------------------SHOW TIME AND DATE-------------------------------------------------------------------------
 from datetime import datetime
+
+import google.generativeai as genai
+
 #---------------------------------------------------------------------SELECT ANY WORD-----------------------------------------------------------------------------------
 import random
 import matplotlib.pyplot as plt
+
 print("\033[31m ________   _______      ___    ___ ___  ___  ________                 ___  ________  ________  ___      ___ ___  ________          ")
 print("\033[31m|\   ___  \|\  ___ \    |\  \  /  /|\  \|\  \|\   ****\               |\  \|\   __  \|\   __  \|\  \    /  /|\  \|\   ****\         ")
 print("\033[31m\ \  \\ \  \ \   **/|   \ \  \/  / | \  \\\  \ \  \***|*              \ \  \ \  \|\  \ \  \|\  \ \  \  /  / | \  \ \  \***|*        ")
@@ -38,7 +42,10 @@ print("\033[31m    \|**| \|**|\|_______/**/ /\ **\    \|*******|\**_______\     
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||NOVA|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+API_KEY = ""  # apni Gemini API key
+genai.configure(api_key=API_KEY)
 
+model = genai.GenerativeModel("gemini-2.5-flash")
 def nova_speak(texts):
     print("AI बोलेगी:", texts)
     filename = f"temp_voice_{int(time.time() * 5000)}.mp3"
@@ -242,6 +249,25 @@ if access_granted:
                 except Exception as e:
                     print(random.choice([ "\033[31mSIR: Please attempt it again, SIR.\033[0m","\033[32mSIR: That didn't go through, try again, SIR.\033[0m","\033[33mSIR: Kindly repeat the action, SIR.\033[0m","\033[34mSIR: SIR, you may try again now.\033[0m","\033[35mSIR: The process failed, please retry, SIR.\033[0m","\033[36mSIR: Requesting another attempt, SIR.\033[0m","\033[37mSIR: Command not completed, try again, SIR.\033[0m","SIR: Please repeat your input, SIR.","SIR: Go ahead with another try, SIR.","SIR: SIR, please perform that action again.","SIR: Let’s give it one more try, SIR.","SIR: Retry recommended, SIR.","SIR: SIR, that didn’t work — try once more.","SIR: Please input again, SIR.","SIR: Attempt once more for accuracy, SIR."]))
                     jarvis_speak(random.choice(["SIR: Please attempt it again, SIR.","SIR: That didn't go through, try again, SIR.","SIR: Kindly repeat the action, SIR.","SIR: SIR, you may try again now.","SIR: The process failed, please retry, SIR.","SIR: Requesting another attempt, SIR.","SIR: Command not completed, try again, SIR.","SIR: Please repeat your input, SIR.","SIR: Go ahead with another try, SIR.","SIR: SIR, please perform that action again.","SIR: Let’s give it one more try, SIR.","SIR: Retry recommended, SIR.","SIR: SIR, that didn’t work — try once more.","SIR: Please input again, SIR.","SIR: Attempt once more for accuracy, SIR."]))
+
+            elif "chat" in user_text.lower():
+                print(random.choice(["\033[31mHello! I'm Gemini. Speak your prompt. Type 'exit' to quit.\033[0m","\033[32mHello! I'm Gemini. Type your prompt. Type 'exit' to quit.\033[0m","\033[33mHello! I'm Gemini. Type your prompt. Type 'exit' to quit.\033[0m","\033[34mHello! I'm Gemini. Type your prompt. Type 'exit' to quit.\033[0m"]))
+                jarvis_speak("Hello! I'm Gemini. Speak your prompt. Type 'exit' to quit.")
+                try: 
+                    with sr.Microphone() as source: 
+                        recognizer.adjust_for_ambient_noise(source, duration=1)
+                        audio_city = recognizer.listen(source)
+                        city = recognizer.recognize_google(audio_city, language='en-IN')
+                        response = model.generate_content(city)
+                        if "exit" in city.lower():
+                            jarvis_speak("exit Gmeni")
+                            break
+        # Colored text randomly (red, green, yellow)
+                        colors = ["\033[31m", "\033[32m", "\033[33m","\033[34m","\033[35m","\033[36m","\033[37m"]
+                        color = random.choice(colors)
+                        jarvis_speak(f"{color}Gemini > {response.text}\033[0m")
+                except Exception as e:
+                    print("Error:", e)
 
 #|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||WEATHER|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#            
             elif any(word in user_text.lower() for word in ["mausam","weather"]):
