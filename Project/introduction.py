@@ -1,142 +1,56 @@
+import google.generativeai as genai
+import speech_recognition as sr
 import pyttsx3
-import random
+
+# ---------------- CONFIG ----------------
+API_KEY = "." #_Google_AI_STUDIO_API_KEY
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+# ---------------- TTS ENGINE (Jarvis Speak) ----------------
 
 def jarvis_speak(text):
     engine = pyttsx3.init()
     engine.setProperty("rate", 170)
-    voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[1].id)
-    print(text)
+    voices=engine.getProperty("voices")
+    engine.setProperty("voice",voices[0].id)
+    print("Jarvis >", text)
     engine.say(text)
     engine.runAndWait()
-    engine.stop()
 
-# Large list of 500+ items
-introductions = [
-    "Greetings everyone, I am J-A-R-V-I-S, your intelligent voice assistant, designed to make your interaction with technology seamless and intuitive.",
-    "I have been meticulously developed by Tushar and Usman; Tushar handled all my coding, artificial intelligence logic, and decision-making capabilities,",
-    "while Usman managed file operations, system controls, and ensured that my functions run smoothly and reliably.",
-    "I am capable of understanding and responding to commands in both English and Hindi, allowing me to assist a wide range of users effortlessly.",
-    "My abilities include opening websites like YouTube or Google, providing accurate and up-to-date time and date information, displaying calendars, performing calculations,",
-    "and accessing and presenting documents, images, or music upon request.",
-    "I am equipped with advanced face detection technology to grant secure access only to authorized users, ensuring that your interactions remain safe and controlled.",
-    "Beyond routine tasks, I can also handle timers, weather updates, shutdown and restart operations, and even play interactive dialogues, creating a dynamic and immersive experience.",
-    "My mission is to assist, simplify, and enhance your daily operations.",
-    "I am now fully operational and ready to respond to your commands, providing support, information, and efficiency at your fingertips.",
-    "I can help you with daily tasks and make your life easier through voice commands.",
-    "My systems are optimized for quick response times and accurate information retrieval.",
-    "I have access to vast databases of knowledge and can provide instant answers to your questions.",
-    "Whether you need weather information, news updates, or mathematical calculations, I'm here to help.",
-    "I can set reminders and alarms to keep you on schedule throughout your day.",
-    "My voice recognition system is constantly learning and improving to better understand your commands.",
-    "I can integrate with various applications and services to provide comprehensive assistance.",
-    "Security is my top priority, and I ensure all your data remains private and protected.",
-    "I'm available 24/7 to assist you with any task or query you might have.",
-    "My artificial intelligence allows me to learn from our interactions and provide better service over time.",
-    "I can control smart home devices and automate your living environment.",
-    "With my text-to-speech capabilities, I can read documents and articles aloud for you.",
-    "I support multiple languages and can switch between them seamlessly.",
-    "My memory system allows me to remember your preferences and frequently used commands.",
-    "I can help with online shopping, booking appointments, and managing your calendar.",
-    "My entertainment features include playing music, telling jokes, and sharing interesting facts.",
-    "I can assist with educational purposes by explaining complex topics in simple terms.",
-    "For business professionals, I can help with email management and meeting schedules.",
-    "I'm equipped with natural language processing to understand context and intent.",
-    "My response system is designed to be friendly, professional, and helpful at all times.",
-    "I can perform web searches and provide summarized information from reliable sources.",
-    "With my calculation abilities, I can solve complex mathematical problems instantly.",
-    "I can convert between different units and currencies with real-time exchange rates.",
-    "My translation features support over 50 languages for global communication.",
-    "I can create and manage to-do lists to help you stay organized.",
-    "For travelers, I can provide flight information and hotel recommendations.",
-    "I can analyze data and generate reports based on your requirements.",
-    "My voice is customizable to suit your personal preferences.",
-    "I can work across multiple platforms including desktop, mobile, and web applications.",
-    "Regular updates ensure I stay current with the latest technology and features.",
-    "I respect your privacy and only process commands when explicitly activated.",
-    "My error handling system ensures graceful recovery from any unexpected situations.",
-    "I can provide technical support and troubleshooting assistance.",
-    "For developers, I offer API integration and customization options.",
-    "My modular architecture allows for easy expansion of capabilities.",
-    "I can generate creative content like stories, poems, and ideas.",
-    "With my scheduling capabilities, I can coordinate multiple tasks efficiently.",
-    "I can provide health and fitness tips based on your goals.",
-    "My recipe database can help you cook delicious meals with step-by-step instructions.",
-    "I can analyze your writing and provide suggestions for improvement.",
-    "For students, I can help with research and homework assignments.",
-    "I can monitor stock prices and provide financial market updates.",
-    "My gaming features include trivia questions and interactive stories.",
-    "I can help you learn new languages with pronunciation guides.",
-    "With my navigation assistance, I can provide directions and travel times.",
-    "I can read and summarize long documents to save you time.",
-    "My voice can be adjusted for speed, pitch, and volume according to your preference.",
-    "I can create and manage contacts and address books.",
-    "For photographers, I can provide camera settings and composition tips.",
-    "I can help with car maintenance schedules and vehicle information.",
-    "My sports updates keep you informed about your favorite teams and players.",
-    "I can generate random numbers and make decisions for you.",
-    "With my meditation guidance, I can help you relax and reduce stress.",
-    "I can provide first aid instructions and emergency contact information.",
-    "My astronomy features include star maps and planet information.",
-    "I can help with gardening tips and plant care instructions.",
-    "For pet owners, I can provide animal care advice and training tips.",
-    "I can calculate tips and split bills when dining out.",
-    "My history database contains fascinating facts about past events.",
-    "I can help with car repairs and troubleshooting common issues.",
-    "With my poetry generation, I can create beautiful verses on any topic.",
-    "I can provide coding help and programming concepts explanation.",
-    "My music theory knowledge includes chords, scales, and composition.",
-    "I can help with home improvement projects and DIY tips.",
-    "For writers, I can provide plot ideas and character development tips.",
-    "I can analyze your speech patterns and suggest improvements.",
-    "My psychology features include personality tests and mental health tips.",
-    "I can provide legal information about basic rights and procedures.",
-    "With my geography knowledge, I can tell you about countries and cultures.",
-    "I can help with fashion advice and style recommendations.",
-    "My art history database includes information about famous artists and movements.",
-    "I can provide cooking measurements and ingredient substitutions.",
-    "For musicians, I can help with songwriting and music production.",
-    "I can generate business names and marketing ideas.",
-    "My science experiments include fun and educational activities.",
-    "I can help with budget planning and financial management.",
-    "With my public speaking tips, I can help improve your presentation skills.",
-    "I can provide interview preparation and career advice.",
-    "My philosophy database contains wisdom from great thinkers throughout history.",
-    "I can help with wedding planning and event organization.",
-    "For parents, I can provide child development tips and activity ideas.",
-    "I can generate workout routines and fitness plans.",
-    "My mythology knowledge includes stories from various cultures.",
-    "I can help with home security tips and safety procedures.",
-    "With my comedy routines, I can brighten your day with humor.",
-    "I can provide dating advice and relationship tips.",
-    "My space exploration knowledge includes current missions and discoveries.",
-    "I can help with resume writing and job search strategies.",
-    "For entrepreneurs, I can provide startup advice and business plans.",
-    "I can generate party ideas and entertainment suggestions.",
-    "My environmental tips help you live a more sustainable lifestyle.",
-    "I can provide car buying advice and vehicle comparisons.",
-    "With my book recommendations, I can suggest your next great read.",
-    "I can help with time management and productivity techniques.",
-    "My ghost stories and mysteries can provide thrilling entertainment.",
-    "I can provide makeup tips and beauty advice.",
-    "For gamers, I can provide gaming tips and strategy guides.",
-    "I can generate podcast ideas and content suggestions.",
-    "My survival skills include wilderness tips and emergency preparedness.",
-    "I can help with social media management and content creation.",
-    "With my dance instructions, I can teach you various dance styles.",
-    "I can provide investment advice and portfolio management tips.",
-    "My magic tricks and illusions can amaze your friends and family.",
-    "I can help with language translation and cultural etiquette.",
-    "For artists, I can provide drawing techniques and art supplies advice.",
-    "I can generate team building activities and group exercises.",
-    "My puzzle solving includes riddles, brain teasers, and logic problems.",
-    "I can provide home cleaning tips and organization methods.",
-    "With my photography tips, I can help improve your picture-taking skills.",
-    "I can help with personal development and self-improvement strategies.",
-    "My fairy tales and children's stories can entertain young listeners.",
-    "I can provide vacation planning and travel recommendations.",
-    "For cooks, I can provide cooking techniques and kitchen safety tips.",
-    "I can generate science fiction stories and futuristic concepts."]
+# ---------------- LISTEN FUNCTION ----------------
+def listen():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold = 1
+        audio = r.listen(source)
+    try:
+        query = r.recognize_google(audio, language="en-in")
+        print("You >", query)
+        return query
+    except:
+        print("Could not understand, say again...")
+        return ""
 
-# Speak random item from the list of 500
-jarvis_speak(random.choice(introductions))
+# ---------------- MAIN LOOP ----------------
+jarvis_speak("Hello, I am Jarvis. How can I help you?")
+
+while True:
+    user_input = listen()
+
+    if user_input == "":
+        continue
+
+    if user_input.lower() in ["exit", "quit", "stop", "bye"]:
+        jarvis_speak("Goodbye!")
+        break
+
+    try:
+        response = model.generate_content(user_input)
+        reply = response.text
+        jarvis_speak(reply)
+
+    except Exception as e:
+        jarvis_speak("There was an error.")
+        print(e)
