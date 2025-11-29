@@ -42,7 +42,7 @@ print("\033[31m    \|**| \|**|\|_______/**/ /\ **\    \|*******|\**_______\     
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||NOVA|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
-API_KEY = "AIzaSyBbQhsyHrpRRu-WLLUciBySkjwtDW4LxKU"  # apni Gemini API key
+API_KEY = ""  # apni Gemini API key
 genai.configure(api_key=API_KEY)
 
 model = genai.GenerativeModel("gemini-2.5-flash")
@@ -2033,3 +2033,4 @@ if access_granted:
 else:
     print(random.choice(["\033[31mTry Again Sir\033[0m","\033[32mPlease try again, Sir!\033[0m","\033[33mOops! Try again, Sir \033[0m","⚠\033[34mTry again, Sir!\033[0m","\033[35mSir, one more try!\033[0m","\033[36mRetry, Sir… let's go!\033[0m","\033[37mSir, attempt it again.\033[0m"]))
     jarvis_speak(random.choice(["Try Again Sir","Please try again, Sir!","Oops! Try again, Sir","Try again, Sir!","Sir, one more try!","Retry, Sir… let's go!","Sir, attempt it again."]))
+
