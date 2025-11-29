@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HUD UI</title>
+<style>
+body {
+    margin: 0;
+    background: url('ab.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #0fe6ff;
+    font-family: Arial;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 220px 1fr 220px;
+    gap: 24px;
+    padding: 28px;
+    height: 100vh;
+}
+
+.side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.side-col.right {
+    align-items: flex-end;
+}
+
+.v-btn {
+    width: 160px;
+    height: 64px;
+    border: 2px solid rgba(15, 230, 255, 0.14);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(15, 230, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.v-btn:hover {
+    transform: translateY(-4px);
+    border-color: #0fe6ff;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10cm;
+}
+
+.arc-image {
+    width: 260px;
+    filter: drop-shadow(0 0 25px #0fe6ff);
+    cursor: pointer;
+}
+
+/* bv.png position */
+.bottom-left-image {
+    position: fixed;
+    top: calc(20px + 12cm);
+    left: calc(20px + 3.4cm);
+    width: 440px;
+    height: auto;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="side-col left">
+    <div class="v-btn" onclick="runTime()">TIME</div>
+    <div class="v-btn" onclick="runScript()">SCRIPT</div>
+    <div class="v-btn" onclick="runJarvis()">JARVIS</div>
+    <div class="v-btn" onclick="runGoogle()">GOOGLE</div>
+  </div>
+
+  <div class="center">
+    <img src="arc1.png" class="arc-image">
+  </div>
+
+  <div class="side-col right">
+    <div class="v-btn">DATE</div>
+    <div class="v-btn">CALENDAR</div>
+    <div class="v-btn">MATRIX</div>
+    <div class="v-btn">GRAPH</div>
+  </div>
+</div>
+
+<!-- bv.png click to run introduction.py -->
+<img src="bv.png" class="bottom-left-image" onclick="runIntro()">
+
+<script>
+// ----------------- Button functions -----------------
+function runTime() {
+    fetch('http://localhost:8000/time')
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+
+function runScript() {
+    fetch('http://localhost:8000/runScript', { method: 'POST' })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+
+function runJarvis() {
+    fetch('http://localhost:8000/runJarvis', { method: 'POST' })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+
+function runGoogle() {
+    fetch('http://localhost:8000/runGoogle', { method: 'POST' })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+
+// ----------------- bv.png → introduction.py -----------------
+function runIntro() {
+    fetch('http://localhost:8000/runIntro', { method: 'POST' })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>
